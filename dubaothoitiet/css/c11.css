@@ -1,0 +1,17 @@
+body{
+  background-color: blue;
+  text-align: center;
+  color: white;
+  font-family: sans-serif;
+  font-weight: 400;
+}
+h1,h2{
+  font-size: 500;
+}
+.temp, .weather{
+  font-size: 35px;
+}
+.icon{
+  height: 65px;
+  width: 55px;
+}

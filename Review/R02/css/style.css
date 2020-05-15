@@ -1,0 +1,9 @@
+.error-msg{
+  color: red;
+}
+.success-msg{
+  color: green;
+}
+.form-control{
+   margin: 5px 0px 5px 0px;
+}

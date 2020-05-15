@@ -1,0 +1,51 @@
+#body{
+   font-family: Tahoma;
+   font-size:17px;
+   width:1500px;
+   margin:0px auto;}
+#menu {
+  margin: 0px;
+  padding: 0px;
+    background: #663300;
+    height: 50px;
+    float: left;
+    text-align: center;
+  }
+
+#menu ul {
+  margin: 0px;
+  padding: 0px;
+}
+
+#menu ul li {
+  float:left;
+  list-style-type: none;
+}
+#menu ul li a{
+  display: block;
+  text-decoration: none;
+}
+#than #thantrai{
+    width:500px;
+    backGround:#ccc;
+    height:2000px;
+    float:left;
+    min-height:400px;}
+#than #thangiua{
+    width:500px;
+    background:#FA8072;
+    height:2000px;
+    min-height:400px;
+    float:left;}
+#than #thanphai{
+  width:500px;
+  background:blue;
+  height:2000px;
+  min-height:400px;}
+#duoi{
+  width:auto;
+  height:80px;
+  background:#FFB6C1;
+  line-height:80px;
+  text-align:center;
+}

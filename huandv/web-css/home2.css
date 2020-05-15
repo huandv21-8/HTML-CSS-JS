@@ -1,0 +1,97 @@
+*{
+  margin: 0px;
+  padding: 0px;
+}
+body{
+  width:1300px;
+  height: 900px;
+  text-align: center;
+}
+#menu{
+  width:100%;
+  backGround-color:#5F9EA0;
+  position: fixed;  /*cho menu co dinh tai 1 cho*/
+  top: 0;   /*co dinh ben tren */
+}
+#co{
+  width:1300px;
+  height:auto;
+  backGround-color:#FFDEAD;
+}
+#thantrai{
+  width:500px;
+  height:900px;
+  backGround-color:#B8860B;
+  float:left;
+  min-height:900px;
+}
+#thangiua{
+  width:500px;
+  height:900px;
+  backGround-color:#228B22;
+  float:left;
+  min-height:900px;
+}
+#thanphai{
+  width:300px;
+  height:900px;
+  backGround-color:#A8A8A8;
+  float:left;
+  min-height:900px;
+}
+#duoi{
+  width:1300px;
+  height:40px;
+  text-align:center;
+  backGround-color:#669;
+  clear:left;
+  line-height:40px;
+}
+#menu ul {
+  list-style-type:none;
+  text-align: center;
+}
+#menu ul li {
+  color: #fff;
+  display:inline-table;
+  width:120px;
+  height:40px;
+  line-height:40px;
+  position:relative;
+  list-style: none;
+}
+#menu ul li a{
+  height:40px;
+  text-decoration:none;
+  line-height:40px;
+  display:block;
+  border-right: 1px solid #0F0;
+  text-align:center;
+
+}
+#menu ul li a:hover {
+  background:#f1f1f1;
+  color:#000;
+}
+#menu ul li > .sub-menu {
+  display:none;
+  position:absolute;
+  background:#5F9EA0;
+  color:#000
+}
+#menu ul li:hover .sub-menu{
+  display:block;
+}
+#menu ul li a form input{
+  width:130px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 4px;
+  outline:none;
+  padding: 6px 14px;
+  text-align: right;
+}
+#co img {
+  width:1300px;
+  height:180;
+}

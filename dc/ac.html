@@ -1,0 +1,607 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<link rel="dns-prefetch" href="https://s1.citypass.net">
+<link rel="dns-prefetch" href="//ajax.googleapis.com">
+<link rel="dns-prefetch" href="//p.typekit.net">
+<link rel="dns-prefetch" href="//use.typekit.net">
+<link rel="dns-prefetch" href="//c.go-mpulse.net">
+<link rel="dns-prefetch" href="//www.googletagmanager.com">
+<link rel="dns-prefetch" href="//www.google-analytics.com" crossorigin>
+<link rel="dns-prefetch" href="//4351156.fls.doubleclick.net" crossorigin>
+<link rel="dns-prefetch" href="//ad.doubleclick.net" crossorigin>
+<link rel="dns-prefetch" href="//sessions.bugsnag.com">
+<link rel="preconnect" href="https://s1.citypass.net" crossorigin>
+<link rel="preconnect" href="//cdn.polyfill.io" crossorigin>
+<link rel="preload" href="https://s1.citypass.net/css-a4abfa8/global.css" as="style">
+<link rel="preload" href="https://s1.citypass.net/js-a4abfa8/bugsnag.js" as="script">
+<link rel="preload" href="https://s1.citypass.net/js-a4abfa8/global.js" as="script">
+<link rel="preload" href="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js" as="script">
+<link rel="preload" href="https://s1.citypass.net/css-a4abfa8/fonts/icon.ttf" as="font" crossorigin>
+<link rel="preload" href="https://s1.citypass.net/js-a4abfa8/checkout.js" as="script">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<title>CityPASS&reg; | Carrinho de Compras</title>
+<meta name="description" content="Compre os ingressos CityPASS online hoje">
+<meta name="robots" content="noindex,nofollow">
+<script>
+		var pageLoadStartTime = new Date().getTime();
+
+		window.CP = {
+			env: 'production',
+			version: '-a4abfa8',
+						events: {
+				emit: function(event, data) {
+					this._events || (this._events = []);
+					this._events.push([event, data]);
+				},
+				on: function(event, cb) {
+					this._listeners || (this._listeners = []);
+					this._listeners.push([event, cb]);
+				}
+			},
+			bvReviews: '',
+			bvPixel: 'production',
+			bvENV: 'production',
+			config: {
+				currencies: [{"default":true,"key":"USD","symbol":"$","symbolExtra":"US$","displayName":"U.S. Dollar","displayNameKey":"gen_long_currency_usd"},{"key":"CAD","symbol":"C$","displayName":"Canadian Dollar","displayNameKey":"gen_long_currency_cad"},{"key":"EUR","symbol":"\u20ac","displayName":"Euro","displayNameKey":"gen_long_currency_eur"},{"key":"GBP","symbol":"\u00a3","displayName":"British Pound","displayNameKey":"gen_long_currency_gbp"}],
+				venmo: {
+					profileId: '2830880909589218191'
+				}
+			},
+			experiments: [],
+					};
+
+	</script>
+<script async src="https://s1.citypass.net/js-a4abfa8/bugsnag.js"></script>
+<script>
+		var CPBase = window.CPBase || {}; //set up an 'CPBase' object to contain everything
+
+		(function() {
+			'use strict';
+
+			CPBase.getValue = function(notFoundFn, objectReference) {
+				var arrayOfNames = objectReference;
+				if (!Array.isArray(arrayOfNames)) {
+					if (typeof arrayOfNames === 'string' || arrayOfNames instanceof String) {
+						arrayOfNames = objectReference.split('.');
+					} else {
+						throw new Error('getValue can only accept a string for object reference');
+					}
+				}
+
+				var theValue = window;
+				for (var i = 0; i < arrayOfNames.length; ++i) {
+					var objName = arrayOfNames[i];
+					if (theValue.hasOwnProperty(objName)) {
+						theValue = theValue[objName];
+					} else {
+						return notFoundFn(arrayOfNames, i);
+					}
+				}
+				return theValue;
+			};
+
+			CPBase.getExpectedValue = function(arrayOfNames) {
+				return CPBase.getValue(
+					function(arrayOfNames, index) {
+						var notFound = '';
+						for (var i = 0; i <= index; ++i) {
+							if (notFound.length > 0) { notFound += '.';}
+							notFound += arrayOfNames[i];
+						}
+						notFound += ' was undefined';
+						return notFound;
+
+						// should we log then throw instead?
+					}
+					, arrayOfNames);
+			};
+
+			CPBase.getDefaultedValue = function(defaultValue, arrayOfNames) {
+				return CPBase.getValue(function() { return defaultValue;}, arrayOfNames);
+			};
+
+			CPBase.errors = {
+				cpJSErrorNum: 0,
+				cpJSErrorsArr: [],
+
+				logEvent: logEvent,
+				logJSError: logJSError
+			};
+
+
+			function defaultLogData() {
+				var logData = {};
+				logData.value = 0;
+				logData.url = window.location.href.replace('%E9', 'e');
+				logData.locale = CPBase.getExpectedValue('pageLocale');
+				logData.referer = CPBase.getDefaultedValue('', 'document.referrer');
+
+
+				return logData;
+			}
+
+			function logEvent(category, action, label, additionalLogData) {
+				if (typeof bugsnagClient === 'undefined') return;
+				if (typeof bugsnagClient.config !== 'undefined' && bugsnagClient.config.autoNotify === false) return;
+
+				var logData = $.extend(defaultLogData()
+					, { category: category }
+					, { action: action }
+					, { label: label }
+				);
+				if (typeof additionalLogData != 'undefined') {
+					logData = $.extend(logData, additionalLogData);
+				}
+
+				bugsnagClient.notify(
+					{ name: category, message: action },
+					{ metaData: logData, severity: 'info' }
+				);
+
+				if (!window.$) throw new Error('jQuery not loaded before error: ' + JSON.stringify(logData));
+
+				$.ajax({
+						url: '/loadnocache/log-event',
+						type: 'POST',
+						data: logData
+					})
+					.fail(function(jqXHR, textStatus, errorThrown) {
+						$.ajax({
+							url: '/loadnocache/log-event',
+							type: 'POST',
+							data: {
+								category: 'Logging',
+								action: 'log-event-failed',
+								label: textStatus + ', ' + errorThrown.message
+							}
+						});
+					});
+			}
+
+			function logJSError(type, errObj) {
+				if (CPBase.errors.cpJSErrorNum < 10) {
+					errObj = CPBase.getDefaultedValue({ msg: '', url: '', line: 0, column: 0 }, errObj);
+					var errMessage = CPBase.getDefaultedValue('', errObj.msg);
+					var errUrl = CPBase.getDefaultedValue('', errObj.url);
+					var errLine = CPBase.getDefaultedValue(0, errObj.line);
+					var category = type + 'JSError';
+					var action = (errMessage.indexOf(':') == -1 ? 'UnknownError' : errMessage.substr(0, errMessage.indexOf(':')));
+					var label = errMessage + ' (' + errUrl.substr(errUrl.indexOf('.com') + 4)
+						+ ', ln: ' + errLine + (typeof errObj.column != 'undefined' ? ', col:' + errObj.column : '') + ')';
+
+					var stack;
+					if (errObj.exception && errObj.exception.stack) {
+						stack = { stack: errObj.exception.stack };
+					}
+
+					CPBase.errors.logEvent(category, action, label, stack);
+				} else if (CPBase.errors.cpJSErrorNum == 10) {
+					CPBase.errors.logEvent(type + 'JSError', 'JSErrorLogMaxReached');
+				}
+				CPBase.errors.cpJSErrorNum++;
+			}
+
+		})();
+
+		function performanceAPIMark(label) {
+			if (typeof performance != 'undefined') {
+				if (typeof performance.mark == 'function') {
+					performance.mark(label);
+				}
+			}
+		}
+
+		function performanceAPIMeasure(label, mark1, mark2) {
+			if (typeof performance != 'undefined') {
+				if (typeof performance.measure == 'function') {
+					performance.measure(label, mark1, mark2);
+				}
+			}
+		}
+	</script>
+<script>
+			(function() {
+				if (window.BOOMR && window.BOOMR.version) {return;}
+				var dom, doc, where, iframe = document.createElement('iframe');
+				iframe.src = 'javascript:false';
+				iframe.title = '';
+				iframe.role = 'presentation';
+				(iframe.frameElement || iframe).style.cssText = 'width:0;height:0;border:0;display:none;';
+				where = document.getElementsByTagName('script')[0];
+				where.parentNode.insertBefore(iframe, where);
+
+				try {
+					doc = iframe.contentWindow.document;
+				} catch (e) {
+					dom = document.domain;
+					iframe.src = 'javascript:var d=document.open();d.domain=\'' + dom + '\';void(0);';
+					doc = iframe.contentWindow.document;
+				}
+				doc.open()._l = function() {
+					var js = this.createElement('script');
+					if (dom) this.domain = dom;
+					js.id = 'boomr-if-as';
+					js.src = '//c.go-mpulse.net/boomerang/' +
+						'AYU64-XXQTC-5HVWB-ARW7P-X8ZJ3';
+					BOOMR_lstart = new Date().getTime();
+					this.body.appendChild(js);
+				};
+				doc.write('<body onload="document._l();">');
+				doc.close();
+			})();
+		</script>
+<link rel="stylesheet" href="https://s1.citypass.net/css-a4abfa8/global.css">
+<style type="text/css">
+				@font-face {
+			font-family:"proxima-nova";
+			src:url("https://use.typekit.net/af/87f9a7/000000000000000000017829/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff2"),url("https://use.typekit.net/af/87f9a7/000000000000000000017829/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff"),url("https://use.typekit.net/af/87f9a7/000000000000000000017829/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("opentype");
+			font-style:normal;font-weight:700;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family:"proxima-nova";
+			src:url("https://use.typekit.net/af/e806ea/00000000000000000001782a/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("woff2"),url("https://use.typekit.net/af/e806ea/00000000000000000001782a/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("woff"),url("https://use.typekit.net/af/e806ea/00000000000000000001782a/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("opentype");
+			font-style:italic;font-weight:700;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family:"proxima-nova";
+			src:url("https://use.typekit.net/af/3ae8bb/000000000000000000017823/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),url("https://use.typekit.net/af/3ae8bb/000000000000000000017823/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),url("https://use.typekit.net/af/3ae8bb/000000000000000000017823/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
+			font-style:normal;font-weight:400;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family:"proxima-nova";
+			src:url("https://use.typekit.net/af/7dd23f/000000000000000000017824/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("woff2"),url("https://use.typekit.net/af/7dd23f/000000000000000000017824/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("woff"),url("https://use.typekit.net/af/7dd23f/000000000000000000017824/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("opentype");
+			font-style:italic;font-weight:400;
+			font-display: swap;
+		}
+
+		.tk-proxima-nova { font-family: "proxima-nova",sans-serif; }
+	</style>
+<!--[if IE 9]>
+<link rel="stylesheet" href="https://s1.citypass.net/css-a4abfa8/ie-old.css">
+<![endif]-->
+<script>performanceAPIMark('mark_css');</script>
+<script>
+		(function() {
+			var width = window.innerWidth;
+
+			window.smScr = false;
+			window.medScr = false;
+			window.deviceType = 'desktop';
+
+			function addClass(el, className) {
+				el.classList
+					? el.classList.add(className)
+					: (el.className += ' ' + className);
+			}
+
+			if (width < 668) {
+				smScr = true;
+				deviceType = 'phone';
+				addClass(document.documentElement, 'res');
+			} else if (width <= 1024) {
+				medScr = true;
+				deviceType = 'tablet';
+				addClass(document.documentElement, 'res');
+			}
+
+			addClass(document.documentElement, deviceType);
+		})();
+	</script>
+<script>
+		var cookieDomain = '.citypass.com';
+		var pageLocale = 'pt';
+		var pageType = "checkout";
+		var productKey = false;
+		var attractionKey = false;
+		var codeBase = 'www2';
+
+		var _gaq = _gaq || [];
+
+		var dataLayer = dataLayer || [];
+		dataLayer.push({
+			'deviceType': deviceType,
+			'pageLocale': pageLocale,
+			'siteSection': "Core Commerce",
+			'pageType': pageType		});
+	</script>
+
+<meta name="google-translate-customization" content="23a182d2b9e662-e0b7f7961eea2929-g1b74b826f2122aef-19">
+</head>
+<body id="buy" class="prototype-v1 lang-pt translated no-city translations-available buy">
+<span class="tk-proxima-nova"></span>
+<div class="cookie-notice hidden">
+<div class="cookie-notice__body">
+<div class="cookie-notice__block">
+<p>
+Utilizamos cookies para lhe oferecer a melhor experiência possível em nosso site. Para mais informações, por favor consulte a nossa <a href="/privacy" title="Privacy Policy">Política de Privacidade</a>. Ao continuar navegando, você concorda com o uso de cookies. </p>
+</div>
+<div class="cookie-notice__block">
+<a href="#" class="cookie-notice__accept btn btn-xs btn-info">
+Aceitar </a>
+</div>
+</div>
+</div>
+
+<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-TS59P2"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TS59P2');</script>
+
+<div class="navigation navigation--main qa-menu">
+<div class="navigation__inner">
+<div class="navigation__header
+				">
+<div class="navigation__header-title">
+Destinos </div>
+</div>
+<div class="navigation__body ">
+<ul class="menu-group menu-group--products">
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/atlanta" title="Atlanta">
+<span class="city-icon icon-atl "></span>
+Atlanta </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/boston" title="Boston">
+<span class="city-icon icon-bos "></span>
+Boston </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/chicago" title="Chicago">
+<span class="city-icon icon-chi "></span>
+Chicago </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/dallas" title="Dallas">
+<span class="city-icon icon-dal "></span>
+Dallas </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/denver" title="Denver ">
+<span class="city-icon icon-den "></span>
+Denver </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/houston" title="Houston">
+<span class="city-icon icon-hou "></span>
+Houston </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/new-york-comparison" title="Cidade de Nova York">
+<span class="city-icon icon-nyc "></span>
+Cidade de Nova York </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/orlando" title="Orlando ">
+<span class="city-icon icon-orl "></span>
+Orlando </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/philadelphia" title="Filadélfia">
+<span class="city-icon icon-phl "></span>
+Filadélfia </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/san-francisco-comparison" title="São Francisco">
+<span class="city-icon icon-sf "></span>
+São Francisco </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/seattle" title="Seattle">
+<span class="city-icon icon-sea "></span>
+Seattle </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/southern-california" title="Sul da Califórnia">
+<span class="city-icon icon-socal "></span>
+Sul da Califórnia </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/tampa" title="Tampa Bay">
+<span class="city-icon icon-tb "></span>
+Tampa Bay </a>
+</li>
+<li class="menu-group__item">
+<a class="" href="https://pt.citypass.com/toronto" title="Toronto">
+<span class="city-icon icon-tor "></span>
+Toronto </a>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="page" class="page">
+<!--[if lt IE 10]>
+<div class="global-alert warning-alert alert-show">
+	<span class="global-alert-callout">AVISO - </span>
+	Desculpe, este navegador não é suportado. Você está usando uma versão antiga do Internet Explorer. Recomendamos que você use a última versão do Internet Explorer, Chrome, Firefox ou Safari	<span class="global-alert-close"></span>
+</div>
+<![endif]-->
+<div class="global-alert discount-alert">
+<span class="global-alert-close"></span><span class="global-alert-callout"></span>
+</div>
+<header id="masthead" class="masthead">
+<a href="https://pt.citypass.com" class="masthead-logo" title="CityPASS"><span class="svg-citypass-logo-color icon-citypass-logo-color"></span></a>
+<a id="header-currency" href="javascript:;" class="masthead-icon-link js-modal-link" data-id="currency-selector-contents">
+<span id="header-currency-sym" class="masthead-text-icon">
+</span>
+<span id="header-currency-label" class="masthead-icon-link-label masthead-text-icon-label">
+</span>
+</a>
+<a href="javascript:;" class="masthead-icon-link masthead-icon-link-locale js-modal-link" data-id="locale-selector-contents">
+<div class="masthead-icon-link__content">
+<span class="flag flag-pt" title="Português"></span>
+<span class="locale-code masthead-icon-link-label" data-id="pt">pt</span>
+</div>
+</a>
+<h2 class="masthead-title">Finalização de Compra</h2>
+</header>
+<div id="main-content" class="content-plain " data-role="page">
+<div id="body-container" class="container body-container">
+<div id="checkout-app"></div>
+</div>
+</div>
+<div id="locale-selector-contents" class="locale-selector-contents">
+<div class="modal-header">
+<h2>Escolha seu idioma</h2>
+</div>
+<div class="locale-selector-container">
+<div class="language-list">
+<div class="language-item active">
+<span class="flag flag-pt" title="Português"></span>
+<span class="locale-code" data-id="pt">Português</span>
+</div>
+<a class="language-item" href="https://de.citypass.com/checkout" title="Deutsch">
+<div class="flag flag-de"></div>
+<div class="locale-code" data-id="de">Deutsch</div>
+</a>
+<a class="language-item" href="https://www.citypass.com/checkout" title="English">
+<div class="flag flag-en"></div>
+<div class="locale-code" data-id="en">English</div>
+</a>
+<a class="language-item" href="https://es.citypass.com/checkout" title="Español">
+<div class="flag flag-es"></div>
+<div class="locale-code" data-id="es">Español</div>
+</a>
+<a class="language-item" href="https://fr.citypass.com/checkout" title="Français">
+<div class="flag flag-fr"></div>
+<div class="locale-code" data-id="fr">Français</div>
+</a>
+<a class="language-item" href="https://it.citypass.com/checkout" title="Italiano">
+<div class="flag flag-it"></div>
+<div class="locale-code" data-id="it">Italiano</div>
+</a>
+<a class="language-item" href="https://zh.citypass.com/checkout" title="中文">
+<div class="flag flag-zh"></div>
+<div class="locale-code" data-id="zh">中文</div>
+</a>
+</div>
+</div>
+</div>
+<div id="currency-selector-contents" class="locale-selector-contents">
+<div class="modal-header">
+<h2>Moeda</h2>
+</div>
+<div class="locale-selector-container">
+<div class="language-list currency-nav-list">
+<a class="currency-nav-item" href="javascript:;" currency="USD">
+<div class="locale-code"><b>$</b> U.S. Dollar (USD)</div>
+</a>
+<a class="currency-nav-item" href="javascript:;" currency="CAD">
+<div class="locale-code"><b>C$</b> Canadian Dollar (CAD)</div>
+</a>
+<a class="currency-nav-item" href="javascript:;" currency="EUR">
+<div class="locale-code"><b>€</b> Euro (EUR)</div>
+</a>
+<a class="currency-nav-item" href="javascript:;" currency="GBP">
+<div class="locale-code"><b>£</b> British Pound (GBP)</div>
+</a>
+</div>
+</div>
+</div>
+</div>
+<div id="overlay-container" class="js-overlay-container">
+</div>
+<script>
+		var cartUrl = "https://pt.citypass.com/checkout";
+
+		var cssDir = "https://s1.citypass.net/css-a4abfa8";
+		var feedDir = "/feed-a4abfa8";
+		var imgDir = "https://s1.citypass.net/img-a4abfa8";
+		var jsDir = "https://s1.citypass.net/js-a4abfa8";
+		var loadDir = "https://s1.citypass.net/load-a4abfa8";
+		var loadnocacheDir = "/loadnocache-a4abfa8";
+
+		var testing = true;
+
+		var cartQtyMsg = "Você deve \"selecionar\" uma quantidade.";
+		var cartQtyNumberMsg = "A quantidade deve ser um número.";
+		var cookiesDisabledMsg = "Os cookies devem estar habilitados em seu navegador para você efetuar compras no citypass.com.  Para habilitar os cookies, altere as configurações no seu navegador para aceitar cookies e recarregue a página.";
+		var emailRequiredMsg = "O endereço de e-mail é obrigatório.";
+		var emailInvalidMsg = "Informe um endereço de e-mail válido.";
+
+				CP.i18n = {"cart_footer_links_return_policy":"Pol\u00edtica de devolu\u00e7\u00e3o","cart_gen_adult":"Adulto","cart_gen_child":"Crian\u00e7a","cart_groups_info_notice":"Notamos que voc\u00ea est\u00e1 encomendando uma grande quantidade de ingressos. Por favor, note que muitas das nossas atra\u00e7\u00f5es t\u00eam instru\u00e7\u00f5es especiais que os visitantes devem seguir se chegarem em grupo. ","cart_groups_info_title":"Viagem em Grupo","cart_line_items_table_header_total":"Total","cart_maintenance_intro_message":"Neste momento, o checkout da CityPASS n\u00e3o est\u00e1 dispon\u00edvel por motivos de manuten\u00e7\u00e3o.","cart_maintenance_title":"Lamentamos","cart_payment_label_amazon":"Use a sua conta Amazon para pagar.","cart_payment_label_apple_pay":"Use Apple Pay on your device","cart_payment_label_paypal":"Use sua conta do PayPal para pagar.","cart_preferredbuyer_note":"Logado como","cart_proceed_to_checkout":"Fazer o check-out","cart_redirected_to_paypal":"Voc\u00ea est\u00e1 sendo redirecionado para o PayPal.","cart_title_credit_card":"Cart\u00e3o de Cr\u00e9dito","cart_title_payment_options":"Op\u00e7\u00f5es de Pagamento\n","cart_warning_price_changed_to":" para ","cart_warning_price_changed":"O pre\u00e7o deste item mudou de ","checkout_address_flds_address_2_label":"Endere\u00e7o 2","checkout_address_flds_canada_province_label":"Distrito","checkout_address_flds_city_label":"Cidade","checkout_address_flds_country_label":"Pa\u00eds","checkout_address_flds_first_last_name_label":"Primeiro & \u00daltimo Nome","checkout_address_flds_first_name_label":"Primeiro Nome","checkout_address_flds_last_name_label":"Sobrenome","checkout_address_flds_phone_label":"Telefone","checkout_address_flds_street_address_2_label":"Street Address 2","checkout_address_flds_street_address_label":"Endere\u00e7o","checkout_address_flds_uk_county_label":"Munic\u00edpio","checkout_address_flds_us_state_label":"Estado","checkout_address_flds_zip_label":"Zip","checkout_address_flds_zip_postal_label":"CEP\/ C\u00f3digo Postal","checkout_affirm_redirect_note":"Voc\u00ea est\u00e1 sendo redirecionado para Affirm.","checkout_amazon_redirect_confirm":"Voc\u00ea ser\u00e1 redirecionado para a Amazon para confirmar seus detalhes de pagamento.","checkout_button_place_order":"Fazer Pedido","checkout_card_number":"N\u00famero do Cart\u00e3o","checkout_cart_summary_title_short":"Carrinho","checkout_cart_summary_title":"Seu carrinho","checkout_contact_lead_in":"Preciso de ajuda.","checkout_customer_info_description":"Usado somente para fornecer informa\u00e7\u00f5es de compra ou entrar em contato com voc\u00ea se tivermos uma d\u00favida sobre seu pedido.  ","checkout_customer_info_title_short":"Cliente","checkout_customer_info_title":"Informa\u00e7\u00e3o ao Cliente","checkout_cvv":"CVV","checkout_delivery_method_lbl_email":"Email","checkout_delivery_method_lbl_shipping":"Remessa","checkout_email_delivery_link":"Precisa de bilhetes por e-mail? ","checkout_email_delivery_type_title":"E-mail enviado ","checkout_empty_cart_description":"Parece que voc\u00ea ainda n\u00e3o adicionou nenhum ticket ao seu carrinho.","checkout_empty_cart":"Carrinho Vazio","checkout_error_affirm_funding":"Sua transa\u00e7\u00e3o n\u00e3o p\u00f4de ser conclu\u00edda com a Affirm. Por favor, utilize um m\u00e9todo de pagamento diferente.","checkout_error_affirm_return_to_cart_link":"Clique para tentar novamente","checkout_error_affirm_title":"Afirmar erro de transa\u00e7\u00e3o","checkout_error_amazon_funding":"Sua transa\u00e7\u00e3o n\u00e3o p\u00f4de ser completada usando a Amazon.","checkout_error_amazon_no_data":"Voc\u00ea deve fazer login na Amazon para concluir esta transa\u00e7\u00e3o.","checkout_error_amazon_return_to_cart_link":"Clique para selecionar outro m\u00e9todo de pagamento ou tente novamente com a Amazon","checkout_error_amazon_title":"Um erro ocorreu com sua transa\u00e7\u00e3o na Amazon","checkout_error_paypal_no_data":"You must login to PayPal to complete this transaction.","checkout_error_paypal_redirect":"N\u00e3o foi poss\u00edvel redirecion\u00e1-lo para o PayPal. Atualize o seu navegador e tente novamente ou selecione outra op\u00e7\u00e3o de pagamento.","checkout_error_paypal_return_to_cart_link":"Clique para retornar ao passo 1","checkout_error_paypal_return_to_paypal_link":"Clique para retornar ao PayPal","checkout_error_paypal_title":"Um erro ocorreu com sua transa\u00e7\u00e3o no PayPal","checkout_error_unknown_description":"Por favor, verifique seu envio de pedido abaixo e tente fazer o pedido novamente.  Se ainda assim n\u00e3o conseguir, entre em contato com o servi\u00e7o de atendimento ao consumidor em (888) 330-5008 ou +1 (208) 787-4300.","checkout_error_unknown_title":"Erro desconhecido","checkout_exp_date":"Validade","checkout_expiration_placeholder":"MM \/ YY","checkout_flds_arrival_date_label":"Dia de Chegada","checkout_flds_full_name":"Nome completo","checkout_full_name_error":"Primeiro e \u00faltimo nome requerido","checkout_lead_traveler_name_description":"Forne\u00e7a o nome do titular do bilhete principal.","checkout_lead_traveler":"Viajante L\u00edder","checkout_names_add_person":"Adicionar novo viajante","checkout_names_lead_traveler_error":"Lead Traveler must be assigned a Walt Disney World ticket","checkout_names_name_error":"nome completo exclusivo exigido","checkout_names_success":"Todos os tickets atribu\u00eddos","checkout_names_unassigned_tickets":"Bilhetes n\u00e3o atribu\u00eddos","checkout_names_validation_error":"Please check for validation errors.","checkout_news_signup_desc":"Envie-me not\u00edcias e atualiza\u00e7\u00f5es do CityPASS.","checkout_news_signup_title":"Fique em contato com a gente.","checkout_no_tickets_remaining":"N\u00e3o h\u00e1 tickets restantes para esse grupo et\u00e1rio.","checkout_order_complete_desc":"Seus ingressos est\u00e3o a caminho!","checkout_order_complete":"Pedido completo","checkout_order_failed_desc":"Seu pedido n\u00e3o p\u00f4de ser processado. ","checkout_order_failed":"Falha no pedido","checkout_order_processing":"processamento de pedido","checkout_orror_paypal_funding":"Sua transa\u00e7\u00e3o n\u00e3o p\u00f4de ser conclu\u00edda com a forma de pagamento escolhida.","checkout_payment_affirm_review_text":"Continue para revisar o seu pedido e pagar com o Affirm","checkout_payment_amazon_continue_text":"Continue para a Amazon","checkout_payment_apple_pay_continue_text":"Continue to review your order and pay with Apple Pay","checkout_payment_fields_disabled":"Cannot be changed while the current payment option is selected","checkout_payment_fields_updated_title":"Fields Updated","checkout_payment_paypal_continue_text":"Continue para o PayPal","checkout_payment_review_helper_text":"Continue a revisar e fa\u00e7a seu pedido. ","checkout_payment_title_short":"Pagamento","checkout_payment_title":"Pagamento E Cobran\u00e7a","checkout_payment_unsuccessful":"Pagamento sem sucesso ","checkout_paypal_redirect_confirm":"Voc\u00ea ser\u00e1 redirecionado para o PayPal para confirmar seus detalhes de pagamento.","checkout_phone_field_hint":"Usado somente se houver um problema de pedido","checkout_required":"requeridos ","checkout_return_to_amazon":"Retorno \u00e0 Amaz\u00f4nia","checkout_return_to_paypal":"Retornar ao Paypal","checkout_review_order_title_short":"Avalia\u00e7\u00e3o","checkout_review_order_title":"Revise seu pedido","checkout_section_title_billing_information":"Informa\u00e7\u00f5es de Cobran\u00e7a","checkout_section_title_payment_information":"Informa\u00e7\u00f5es de Pagamento","checkout_section_title_shipping_information":"Informa\u00e7\u00f5es sobre Remessa","checkout_section_title_voucher_exchange":"Quem vai trocar o seu Voucher?","checkout_section_use_shipping_information":"Use my shipping information","checkout_see_order_email":"Consulte o e-mail de confirma\u00e7\u00e3o do pedido para obter instru\u00e7\u00f5es.","checkout_shipping_delivery_additional_fees":"(Taxas adicionais se aplicam) ","checkout_shipping_delivery_desc":"Tal\u00f5es impressos ser\u00e3o enviados ao seu endere\u00e7o. ","checkout_shipping_delivery_link":"Precisa de envio de tal\u00f5es impressos? ","checkout_shipping_delivery_type_title":"Enviado ","checkout_shipping_shipping_method_label":"M\u00e9todo de Remessa","checkout_show_cart":"Mostrar carrinho","checkout_submit_notice":"Por favor aguarde enquanto processamos o seu pedido.<br\/><br\/>Pode levar at\u00e9 30 segundos para concluir o pagamento.","checkout_ticket_delivery_desc":"Todos os ingressos ser\u00e3o entregues neste endere\u00e7o de email.","checkout_ticket_delivery_title":"Entrega de ingressos","checkout_ticket_info_alacarte":"Por favor, forne\u00e7a os nomes para aparecerem em cada ticket. Os adultos podem ter que apresentar um documento de identifica\u00e7\u00e3o, que deve coincidir com o nome no seu bilhete. As idades do viajante s\u00e3o usadas apenas para atribuir tickets e n\u00e3o s\u00e3o armazenadas ou compartilhadas com terceiros.","checkout_ticket_names_description":"Atra\u00e7\u00f5es exigem que cada bilhete seja atribu\u00eddo ao primeiro e \u00faltimo nome de um h\u00f3spede.","checkout_ticket_names_title_short":"Ingressos","checkout_ticket_names_title":"Quem est\u00e1 Visitando?","checkout_totals_flds_processing_label":"Taxa de Processamento","checkout_totals_flds_shipping_label":"Custo de Remessa","checkout_totals_flds_subtotal_label":"Subtotal","checkout_totals_flds_tax_label":"Taxa","checkout_voucher_delivery_desc":"Voucher ser\u00e1 enviado para este endere\u00e7o de e-mail.","checkout_voucher_delivery_title":"Entrega de Voucher","checkout_voucher_name_description":"Atra\u00e7\u00f5es exigem o primeiro e \u00faltimo nome de quem vai trocar este voucher. ","checkout_voucher_provide_names_note":"Forne\u00e7a o nome completo que vai aparecer em cada voucher. A identidade pode ser solicitada para a troca do voucher.","checkout_voucher_step_title":"Atribuir Voucher","discount_label_alacarte_bundle_2_5":"Veja Mais &amp; Economize <span style=\"white-space:nowrap\">(Desconto de $5)<\/span>","gen_age":"Idade","gen_chat_with_agent":"Converse com um agente do CityPASS","gen_city_links_lead_in":"Encontre bilhetes para estas cidades","gen_city_names_atlanta":"Atlanta","gen_city_names_boston":"Boston","gen_city_names_chicago":"Chicago","gen_city_names_dallas":"Dallas","gen_city_names_denver":"Denver ","gen_city_names_houston":"Houston","gen_city_names_new-york_extended":"Cidade de Nova York","gen_city_names_new-york-c3_extended":"Cidade de Nova York","gen_city_names_new-york-c3":"Nova Iorque","gen_city_names_new-york":"Nova York","gen_city_names_orlando":"Orlando ","gen_city_names_philadelphia":"Filad\u00e9lfia","gen_city_names_san-francisco-c3":"San Francisco","gen_city_names_san-francisco":"S\u00e3o Francisco","gen_city_names_seattle":"Seattle","gen_city_names_southern-california":"Sul da Calif\u00f3rnia","gen_city_names_tampa":"Tampa Bay","gen_city_names_toronto":"Toronto","gen_citypass_concierge":"Concierge CityPASS","gen_click_here":"Clique aqui","gen_collapse":"Minimizar","gen_contact_us_title":"Entre em contato conosco","gen_continue":"Continuar ","gen_customer_service_title":"Atendimento ao Cliente","gen_done":"Feito","gen_edit":"Editar","gen_email":"E-mail","gen_error":"Erro","gen_failed":"Falhou","gen_included":"inclu\u00eddo","gen_invalid_email":"Endere\u00e7o de email invalido","gen_invalid_phone":"N\u00famero de telefone inv\u00e1lido","gen_invalid":"Inv\u00e1lido","gen_more_information_title":"Mais informa\u00e7\u00f5es","gen_not_applicable_short":"N\/A","gen_privacy_and_security_title":"Privacidade e seguran\u00e7a","gen_processing":"Em processamento","gen_product_cart_gate_savings_link":"Como calculamos a economia ","gen_product_cart_gate_savings":"Comparado ao normal<br\/>Pre\u00e7os de bilheteria ","gen_remove":"Remover","gen_required":"Requerido","gen_save_up_to":"Economize at\u00e9","gen_shipping_details_title":"Detalhes do envio","gen_terms_title":"Termos &amp; Condi\u00e7\u00f5es","gen_tickets":"Ingressos","gen_voucher":"Voucher","gen_your_savings":"Suas economias ","cart_maintenance_solution_message":"Por favor, verifique novamente [[when]]e seus itens do carrinho devem aparecer e estar dispon\u00edveis para compra.","checkout_link_to_change_payment":"[[link]] para alterar as informa\u00e7\u00f5es de pagamento.","checkout_payment_fields_updated_desc":"The email address from your payment provider must be used for this order. Please be aware that we have updated your email from <strong>[[email_from]]<\/strong> to <strong>[[email_to]]<\/strong>.","checkout_terms_agreement_statement":"Ao clicar neste bot\u00e3o, voc\u00ea concorda com os [[terms_link]] do CityPASS.","common_business_hours":"9am-7pm Eastern Time","common_citypass_title":"CityPASS","common_phone_australia":"(02) 8005 5729","common_phone_international":"+1 (208) 787-4300","common_phone_mexico":"55 4169 2589","common_phone_tollfree":"(888) 330-5008","common_phone_uk":"(020) 3287 8369","gen_email_policy_text":"Agradecemos a oportunidade de envi\u00e1-lo not\u00edcias e atualiza\u00e7\u00f5es sobre o CityPASS ocasionalmente. Voc\u00ea pode cancelar a inscri\u00e7\u00e3o a qualquer momento, clicando no link de cancelamento na parte inferior de qualquer e-mail recebido de n\u00f3s. Tenha boas viagens!","gen_invalid_length":"[[num]] caracteres. O m\u00e1ximo \u00e9 de [[max]].","cart_alert_alacarte_qty_limit":"Voc\u00ea n\u00e3o pode comprar mais de 10 tickets para uma \u00fanica atra\u00e7\u00e3o em um pedido. Por favor, compre separadamente.","cart_alert_alacarte_single_type":"You cannot have more than one ticket type in your cart for each attraction.","cart_alert_item_conflict":"Voc\u00ea tem itens existentes no seu carrinho que n\u00e3o podem ser comprados com este produto. Por favor, esvazie seu carrinho ou finalize a compra com seus itens existentes para continuar.","cart_alert_max_qty":"Order exceeds maximum quantity","cart_empty":"Seu carrinho est\u00e1 vazio.","gen_cancel":"cancelar","gen_close_window":"fechar","gen_currency":"Moeda","gen_discount":"desconto","gen_go_to_checkout":"V\u00e1 para o Checkout ","gen_long_currency_cad":"D&oacute;lares canadenses","gen_long_currency_eur":"Euro","gen_long_currency_gbp":"Libra brit\u00e2nica","gen_long_currency_usd":"D\u00f3lar americano","gen_ok":"OK","gen_or":"ou","gen_proceed_to_checkout":"Fazer o check-out","gen_product_gate_savings":"Desconto no pre\u00e7o de bilheteria","gen_reload":"recarregue a p\u00e1gina","gen_tax":"impostos","gen_try_again":"Tente novamente","gen_valid":"V\u00e1lido","gen_your_cart":"Seu carrinho","gen_your_price":"Seu pre\u00e7o"};
+	</script>
+<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=default,matchMedia,Array.prototype.includes,Array.prototype.find,Array.prototype.findIndex,Object.assign,Object.entries,Object.keys,Object.values,Promise,Promise.prototype.finally,String.prototype.includes"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="https://code.jquery.com/jquery-3.3.1.min.js"><\/script>')</script>
+<script>
+		if (typeof bugsnagClient !== 'undefined') {
+			window.jQuery || function jQueryDidNotLoad() {
+				bugsnagClient.notify("JQuery failed to load");
+				bugsnagClient.config.autoNotify = false;
+				alert("A crucial page resource has failed to load.  Please refresh the page");
+			}();
+		}
+	</script>
+<script src="https://s1.citypass.net/js-a4abfa8/global.js"></script>
+<script>
+
+		window.homeUrl = 'https://pt.citypass.com';
+		window.cpAmazonJSUrl = 'https://static-na.payments-amazon.com/OffAmazonPayments/us/js/Widgets.js?sellerId=A25IPRDQTY26CM';
+		window.cpAmazonSellerId = 'A25IPRDQTY26CM';
+		window.cpAmazonWebClientId = 'amzn1.application-oa2-client.c2fe9ee49de145e0bec9581757245246';
+
+		var tLongCurrenciesArr = new Object;
+		tLongCurrenciesArr['USD'] = 'Dólar americano';
+		tLongCurrenciesArr['CAD'] = 'D&oacute;lares canadenses';
+		tLongCurrenciesArr['EUR'] = 'Euro';
+		tLongCurrenciesArr['GBP'] = 'Libra britânica';
+
+		var tShortCurrenciesArr = new Object;
+		tShortCurrenciesArr['USD'] = '$';
+		tShortCurrenciesArr['USD_extra'] = 'US$';
+		tShortCurrenciesArr['CAD'] = 'C$';
+		tShortCurrenciesArr['EUR'] = '€';
+		tShortCurrenciesArr['GBP'] = '£';
+
+
+		var tLongCurrenciesArr = new Object;
+		tLongCurrenciesArr['USD'] = 'Dólar americano';
+		tLongCurrenciesArr['CAD'] = 'D&oacute;lares canadenses';
+		tLongCurrenciesArr['EUR'] = 'Euro';
+		tLongCurrenciesArr['GBP'] = 'Libra britânica';
+
+		var tShortCurrenciesArr = new Object;
+		tShortCurrenciesArr['USD'] = '$';
+		tShortCurrenciesArr['USD_extra'] = 'US$';
+		tShortCurrenciesArr['CAD'] = 'C$';
+		tShortCurrenciesArr['EUR'] = '€';
+		tShortCurrenciesArr['GBP'] = '£';
+	</script>
+<script type="text/javascript" src="https://s1.citypass.net/js-a4abfa8/checkout.js"></script>
+<script>
+		performanceAPIMark('mark_js');
+		performanceAPIMeasure('measure_css_to_js', 'mark_css', 'mark_js');
+	</script>
+
+<div id="rkg_cart_tracking"></div>
+<script>
+		// TODO leave this here until we make other calls use the "CP.errors invocation"
+		var postLogEvent = function(category, action, label, additionalLogData) {
+			window.CPBase.errors.logEvent(category, action, label, additionalLogData);
+		};
+
+		// TODO move this into CP.errors.
+		for (var i = 0; i < window.CPBase.errors.cpJSErrorsArr.length; i++) {
+			window.CPBase.errors.logJSError('Onload', window.CPBase.errors.cpJSErrorsArr[i]);
+		}
+
+		var pageLoadedElapsedTime = new Date().getTime() - pageLoadStartTime;
+	</script>
+
+</body>
+</html>

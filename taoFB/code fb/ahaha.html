@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Facebok</title>
+    <link rel="shortcut icon" type="image/png" href="image/logofb.png"/>
+    <style type="text/css">
+      .wapper{
+      background-color: #000000;
+
+      }
+      .logo{
+        background-color: blue;
+        width: 100%;
+        height: 100px;
+      }
+      .logoa{
+        background-color: #4267b2;
+        width: 60%;
+        height: 100px;
+        float: left;
+        color:#f1f1f1;
+        font-size:25px;
+      }
+      .logoa h1{
+          margin-left: 200px;
+      }
+      .logob{
+        background-color: #4267b2;
+        width: 40%;
+        height: 60px;
+        float: right;
+        text-align: center;
+        padding-top: 40px;
+        color:#f1f1f1;
+      }
+      .banner{
+        background-color:#E9EBEE;
+        width: 60%;
+        height: 600px;
+        float: left;
+      }
+      .bannera{
+        padding-left: 200px;
+        padding-top: 35px;
+        padding-right: 50px;
+      }
+      .bannera h1{color:#4267b2;}
+      .menu{
+        background-color: #E9EBEE;
+        height: 600px;
+        width: 40%;
+        float: right;
+      }
+      .menua{
+        background-color: #E9EBEE;
+        height: 600px;
+      }
+      .footer{
+        background-color: black;
+        width: 100%;
+        height: 200px;
+      }
+      input[type=email1]{
+        width: 200px;
+        padding: 5px ;
+        box-sizing:border-box;
+         border: 1px solid #000000;
+        border-radius: 4px;
+      }
+      input[type=email2]{
+        width: 405px;
+        padding: 10px ;
+        box-sizing:border-box;
+        border: 1px solid #000000;
+        border-radius: 4px;
+      }
+      input[type=password] {
+        width: 200px;
+      padding: 5px;
+      box-sizing:border-box;
+      border: 1px solid #000000;
+      border-radius: 4px;
+      }
+      input[type=password1]{
+        width: 405px;
+        padding: 10px ;
+        box-sizing:border-box;
+        border: 1px solid #000000;
+        border-radius: 4px;
+      }
+      input[type=submit]{
+        background-color: blue;
+        color: white;
+        font-size: 20px;
+        border: 1px;
+        padding: 10px;
+        border-radius: 6px;
+      }
+      input[type=text]{
+        width: 200px;
+      padding: 10px;
+      box-sizing:border-box;
+      border: 1px solid #000000;
+      border-radius: 4px;
+      }
+      input[type=number]{
+        width: 100px;
+      padding: 10px;
+      box-sizing:border-box;
+      border: 1px solid #000000;
+      border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wapper">
+      <div class="logo">
+        <div class="logoa">
+         <h1>facebook</h1>
+        </div>
+        <div class="logob">
+          <form>
+            <table>
+            <tr>
+            <th>Email hoặc số điện thoại</th>
+            <th>Mật khẩu</th>
+            </tr>
+            <tr>
+             <th><input type="email1" name="email" id="email" required/></th>
+             <th><input type="password" name="password" id="password" required/></th>
+             <th><input type="submit" value="Đăng nhập"></th>
+            </tr>
+           </table>
+          </form>
+        </div>
+      </div>
+  <div class="banner">
+    <div class="bannera">
+    <h1>Facebook giúp bạn kết nối và chia sẻ với mọi người trong cuộc sống của bạn.</h1><br>
+        <img src="../images/anh-fb.png" width="550"></img>
+  </div>
+    </div>
+    <div class="menu">
+      <div class="menua">
+        <h1>Đăng Ký</h1>
+        <p>Nhanh chóng và dễ dàng.</p>
+        <form>
+          <input type="text" name="firstname" id="firstname" placeholder="Họ" required/>
+          <input type="text" name="lastname" id="lastname" placeholder="Tên" required/><br><br>
+          <input type="email2" name="email" id="email" placeholder="Email" required/><br><br>
+          <input type="password1" name="password" id="password "placeholder="Mật khẩu mới" required/>
+          <p>Ngày sinh</p>
+          <input type="number" name="number" placeholder="Ngày sinh">
+          <input type="number" name="number" placeholder="Tháng sinh">
+          <input type="number" name="number" placeholder="Năm sinh">
+          <p>Giới tính:</p>
+          Nam<input type="radio" name="gender" value="Nam"> &emsp; Nữ<input type="radio" name="gender" value="Nữ">&emsp; Tùy chỉnh<input type="radio" name="gender" value="Tùy chỉnh">
+          <p>Bằng cách nhấn vào Đăng ký<a href="https://www.facebook.com/legal/terms/update"> Điều khoản</a>,<a href="https://www.facebook.com/about/privacy/update"> Chính sách dữ liệu</a><br> và<a href="https://www.facebook.com/policies/cookies/"> Chính sách cookie</a> của chúng tôi qua SMS và hủy nhận bất <br> kỳ lúc nào.</p>
+          <input type="submit" value="Đăng ký"></input>
+          <p><a href="https://www.facebook.com/pages/creation/">Tạo trang</a> dành cho người nổi tiếng, nhãn hiệu hoặc doanh <br> nghiệp.</p>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

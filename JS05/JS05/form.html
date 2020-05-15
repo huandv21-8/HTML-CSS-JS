@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/C05.css">
+    <title>Demo dome & Event</title>
+  </head>
+  <body>
+    <div id="page">
+      <h1>Demo Form</h1>
+      <form id="formSignup"  action="index.html"  method="post">
+        <h2>Membership</h2>
+        <label for="package" class="selectbox">Select a package</label>
+        <select id="package">
+          <option value="annual"> 1 year ($100)</option>
+          <option value="monthly">1 month ($10) </option>
+        </select>
+        <div id="packageHint" class="tip"></div>
+        <input type="checkbox" id = "terms"/>
+        <label for="terms" class="checkbox"> Check your conditions</label>
+        <div id="termsHint" class="warning"></div>
+        <input type="submit" value="Signup"/>
+      </form>
+    </div>
+    <script type="text/javascript" src="js/form.js">
+
+    </script>
+
+  </body>
+</html>

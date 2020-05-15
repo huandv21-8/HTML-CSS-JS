@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Login Page</title>
+    <link rel="stylesheet" type="text/css" href="css/login.css">
+      <script src="https://kit.fontawesome.com/5e5457d628.js" crossorigin="anonymous"></script>
+  </head>
+  <body>
+      <h3>Mời bạn đăng nhập trước khi mua vé !!!</h3>
+    <div id="form">
+      <span class="error-msg" id="total-msg"></span>
+      <form id="login-form" name="login-form">
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Tài khoản</label>
+          <input type="text" name="username" class="form-control short-input"/>
+          <span class="error-msg"></span>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-lock"></i> Mật khẩu</label>
+          <input type="password" name="password" class="form-control short-input"/>
+          <span class="error-msg"></span>
+        </div>
+        <div class="form-group">
+          <label>&nbsp;</label>
+          <input type="button" name="submit" value="Đăng nhập" class="form-control" id="btnSubmit">
+          <button type="button" name="button" class="form-control"><a href="zoo.html">Trang Chủ</a></button>
+        </div>
+        <div class="form-group">
+            <label>&nbsp;</label>
+            <button type="button"  class="form-control" width="100px"><a href="registration.html">Đăng kí</a></button>
+            <button type="button"  class="form-control"><a href="shopping-cart.html">Quay Lại</a></button>
+        </div>
+    </form>
+    </div>
+   <script type="text/javascript" src="js/login.js"></script>
+  </body>
+</html>
